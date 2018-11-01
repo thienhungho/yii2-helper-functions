@@ -1,0 +1,24 @@
+{
+    "name": "thienhungho/yii2-helper-functions",
+    "description": "Helper functions for Yii2",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension","functions","helper"],
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "thienhungho",
+            "email": "thienhungho@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "yiisoft/yii2": "~2.0.14"
+    },
+    "autoload": {
+        "autoload": {
+            "files": [
+                "src/functions.php"
+            ]
+        }
+    }
+}
