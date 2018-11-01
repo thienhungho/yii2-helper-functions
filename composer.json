@@ -15,10 +15,6 @@
         "yiisoft/yii2": "~2.0.14"
     },
     "autoload": {
-        "autoload": {
-            "files": [
-                "src/functions.php"
-            ]
-        }
+        "files": ["src/functions.php"]
     }
 }
