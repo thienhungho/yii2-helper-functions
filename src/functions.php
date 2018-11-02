@@ -149,35 +149,3 @@ function is_enabled_plugin($name)
 
     return true;
 }
-
-/**
- * @return int|string
- */
-function get_current_user_id()
-{
-    return Yii::$app->user->id;
-}
-
-/**
- * @return mixed
- */
-function get_current_user_name()
-{
-    return Yii::$app->user->identity->username;
-}
-
-/**
- * @return mixed
- */
-function get_current_user_email()
-{
-    return Yii::$app->user->identity->email;
-}
-
-/**
- * @return mixed
- */
-function get_current_user_avatar()
-{
-    return Yii::$app->user->identity->avatar;
-}
