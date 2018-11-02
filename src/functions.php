@@ -12,7 +12,7 @@ function app()
  */
 function get_app_name()
 {
-    return require Yii::getAlias('@common') . '/config/name.php';
+    return Yii::$app->name;
 }
 
 /**
