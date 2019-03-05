@@ -34,8 +34,10 @@ if (!function_exists('app_has')) {
  */
 if (!function_exists('app_get')) {
     /**
-     * @param string $component
-     * @return mixed
+     * @param $component
+     *
+     * @return null|object
+     * @throws \yii\base\InvalidConfigException
      */
     function app_get($component) {
         return app()->get($component);
@@ -47,9 +49,10 @@ if (!function_exists('app_get')) {
  */
 if (!function_exists('app_set')) {
     /**
-     * @param string $component
+     * @param $component
      * @param null $options
-     * @return mixed
+     *
+     * @throws \yii\base\InvalidConfigException
      */
     function app_set($component, $options = null) {
         return app()->set($component, $options);
@@ -61,7 +64,8 @@ if (!function_exists('app_set')) {
  */
 if (!function_exists('request')) {
     /**
-     * @return \yii\web\Request
+     * @return null|object
+     * @throws \yii\base\InvalidConfigException
      */
     function request() {
         return app_get('request');
@@ -72,7 +76,8 @@ if (!function_exists('request')) {
  */
 if (!function_exists('response')) {
     /**
-     * @return \yii\web\Response
+     * @return null|object
+     * @throws \yii\base\InvalidConfigException
      */
     function response() {
         return app_get('response');
@@ -84,7 +89,8 @@ if (!function_exists('response')) {
  */
 if (!function_exists('user')) {
     /**
-     * @return mixed
+     * @return null|object
+     * @throws \yii\base\InvalidConfigException
      */
     function user() {
         return app_get('user');
@@ -146,7 +152,8 @@ if (!function_exists('url')) {
  */
 if (!function_exists('auth_manager')) {
     /**
-     * @return mixed
+     * @return null|object
+     * @throws \yii\base\InvalidConfigException
      */
     function auth_manager() {
         return app_get('authManager');
@@ -171,6 +178,10 @@ if (!function_exists('asset_bundle_url')) {
  * Log error
  */
 if (!function_exists('log_error')) {
+    /**
+     * @param $message
+     * @param string $category
+     */
     function log_error($message, $category = 'application') {
         return \Yii::error($message, $category);
     }
@@ -179,6 +190,10 @@ if (!function_exists('log_error')) {
  * Log info
  */
 if (!function_exists('log_info')) {
+    /**
+     * @param $message
+     * @param string $category
+     */
     function log_info($message, $category = 'application') {
         return \Yii::info($message, $category);
     }
@@ -187,6 +202,10 @@ if (!function_exists('log_info')) {
  * Log warning
  */
 if (!function_exists('log_warning')) {
+    /**
+     * @param $message
+     * @param string $category
+     */
     function log_warning($message, $category = 'application') {
         return \Yii::warning($message, $category);
     }
@@ -197,7 +216,8 @@ if (!function_exists('log_warning')) {
  */
 if (!function_exists('asset_manager')) {
     /**
-     * @return mixed
+     * @return null|object
+     * @throws \yii\base\InvalidConfigException
      */
     function asset_manager() {
         return app_get('assetManager');
@@ -209,7 +229,8 @@ if (!function_exists('asset_manager')) {
  */
 if (!function_exists('mailer')) {
     /**
-     * @return \app\yii\swiftmailer\Mailer
+     * @return null|object
+     * @throws \yii\base\InvalidConfigException
      */
     function mailer() {
         return app_get('mailer');
@@ -220,7 +241,8 @@ if (!function_exists('mailer')) {
  */
 if (!function_exists('session')) {
     /**
-     * @return \yii\web\Session
+     * @return null|object
+     * @throws \yii\base\InvalidConfigException
      */
     function session() {
         return app_get('session');
@@ -232,6 +254,7 @@ if (!function_exists('session')) {
 if (!function_exists('cookie')) {
     /**
      * @return mixed
+     * @throws \yii\base\InvalidConfigException
      */
     function cookie() {
         return request()->getCookies();
@@ -331,130 +354,179 @@ if (!function_exists('get_alias')) {
         return \Yii::getAlias($alias, $throwException);
     }
 }
-
 /**
- * @return mixed
+ * Get App Name
  */
-function get_app_name()
-{
-    return Yii::$app->name;
-}
-
-/**
- * @param $url
- *
- * @return string
- */
-function home($url)
-{
-    return $_SERVER['HTTP_HOST'] . "/" . $url;
-}
-
-/**
- * @param $content
- * @param $word_limit
- *
- * @return string
- */
-function get_description($content, $word_limit)
-{
-    $text = strip_tags($content);
-    if (str_word_count($text, 0) > $word_limit) {
-        $words = str_word_count($text, 2);
-        $pos = array_keys($words);
-        $text = substr($text, 0, $pos[$word_limit]) . '...';
+if (!function_exists('get_app_name')) {
+    /**
+     * @return mixed
+     */
+    function get_app_name()
+    {
+        return Yii::$app->name;
     }
-
-    return $text;
 }
-
 /**
- * @return \yii\console\Controller|\yii\web\Controller
+ * Home
  */
-function controller()
-{
-    return \Yii::$app->controller;
-}
-
-/**
- * @return \yii\base\View|\yii\web\View
- */
-function view()
-{
-    return \Yii::$app->view;
-}
-
-/**
- * @return mixed
- */
-function get_current_url()
-{
-    return request()->hostInfo . request()->url;
-}
-
-/**
- * @return mixed
- */
-function get_primary_language()
-{
-    return require \Yii::getAlias('@common') . '/config/language.php';
-}
-
-/**
- *
- */
-function begin_body()
-{
-    echo view()->beginBody();
-}
-
-/**
- *
- */
-function end_body()
-{
-    echo view()->endBody();
-    view()->registerJs(
-        get_setting_value('template_configuration', 'custom_script_code', '')
-    );
-    echo get_setting_value('site_configuration', 'google_analytics_tracking_code', '');
-}
-
-/**
- *
- */
-function end_page()
-{
-    echo view()->endPage();
-}
-
-/**
- * @return bool
- */
-function is_home()
-{
-    $controller = controller();
-    $default_controller = Yii::$app->defaultRoute;
-
-    return (($controller->id === $default_controller)
-        && ($controller->action->id === $controller->defaultAction)) ? true : false;
-}
-
-/**
- * @param $name
- *
- * @return mixed
- */
-function is_enabled_plugin($name)
-{
-    $data = get_setting_value(
-        'plugin_configuration',
-        $name,
-        \backend\modules\PluginConfiguration\PluginForm::STATUS_DISABLED
-    );
-    if ($data == \backend\modules\PluginConfiguration\PluginForm::STATUS_DISABLED) {
-        return false;
+if (!function_exists('home')) {
+    /**
+     * @param $url
+     *
+     * @return string
+     */
+    function home($url)
+    {
+        return $_SERVER['HTTP_HOST'] . "/" . $url;
     }
+}
+/**
+ * Get Description
+ */
+if (!function_exists('get_description')) {
+    /**
+     * @param $content
+     * @param $word_limit
+     *
+     * @return string
+     */
+    function get_description($content, $word_limit)
+    {
+        $text = strip_tags($content);
+        if (str_word_count($text, 0) > $word_limit) {
+            $words = str_word_count($text, 2);
+            $pos = array_keys($words);
+            $text = substr($text, 0, $pos[$word_limit]) . '...';
+        }
 
-    return true;
+        return $text;
+    }
+}
+/**
+ * Controller
+ */
+if(!function_exists('controller')) {
+    /**
+     * @return \yii\console\Controller|\yii\web\Controller
+     */
+    function controller()
+    {
+        return \Yii::$app->controller;
+    }
+}
+/**
+ * View
+ */
+if(!function_exists('view')) {
+    /**
+     * @return \yii\base\View|\yii\web\View
+     */
+    function view()
+    {
+        return \Yii::$app->view;
+    }
+}
+/**
+ * Get Current Url
+ */
+if(!function_exists('get_current_url')) {
+    /**
+     * @return string
+     * @throws \yii\base\InvalidConfigException
+     */
+    function get_current_url()
+    {
+        return request()->hostInfo . request()->url;
+    }
+}
+/**
+ * Get Primary Language
+ */
+if(!function_exists('get_primary_language')) {
+    /**
+     * @return mixed
+     */
+    function get_primary_language()
+    {
+        return require \Yii::getAlias('@common') . '/config/language.php';
+    }
+}
+/**
+ * Begin Body
+ */
+if(!function_exists('begin_body')) {
+    /**
+     *
+     */
+    function begin_body()
+    {
+        echo view()->beginBody();
+    }
+}
+/**
+ * End Body
+ */
+if(!function_exists('end_body')) {
+    /**
+     *
+     */
+    function end_body()
+    {
+        echo view()->endBody();
+        view()->registerJs(
+            get_setting_value('template_configuration', 'custom_script_code', '')
+        );
+        echo get_setting_value('site_configuration', 'google_analytics_tracking_code', '');
+    }
+}
+/**
+ * End Page
+ */
+if(!function_exists('end_page')) {
+    /**
+     *
+     */
+    function end_page()
+    {
+        echo view()->endPage();
+    }
+}
+/**
+ * Is Home
+ */
+if(!function_exists('is_home')) {
+    /**
+     * @return bool
+     */
+    function is_home()
+    {
+        $controller = controller();
+        $default_controller = Yii::$app->defaultRoute;
+
+        return (($controller->id === $default_controller)
+            && ($controller->action->id === $controller->defaultAction)) ? true : false;
+    }
+}
+/**
+ * Is Enabled Plugin
+ */
+if(!function_exists('is_enabled_plugin')) {
+    /**
+     * @param $name
+     *
+     * @return mixed
+     */
+    function is_enabled_plugin($name)
+    {
+        $data = get_setting_value(
+            'plugin_configuration',
+            $name,
+            \backend\modules\PluginConfiguration\PluginForm::STATUS_DISABLED
+        );
+        if ($data == \backend\modules\PluginConfiguration\PluginForm::STATUS_DISABLED) {
+            return false;
+        }
+
+        return true;
+    }
 }
