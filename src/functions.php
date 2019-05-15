@@ -375,9 +375,9 @@ if (!function_exists('home')) {
      *
      * @return string
      */
-    function home($url)
+    function home($url = null)
     {
-        return $_SERVER['HTTP_HOST'] . "/" . $url;
+        return \yii\helpers\Url::home(true) . $url;
     }
 }
 /**
